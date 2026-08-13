@@ -24,7 +24,7 @@ const {
 // ==============================
 
 const TOKEN = "2a8cce4178e38907d9107be2fdb0f5946d652d1182669893dfe7c83a909d2335";
-const CLIENT_ID = "DEINE_BOT_ID";
+const CLIENT_ID = "1537496767233261700";
 const GUILD_ID = "DEINE_SERVER_ID";
 
 // Kanal-IDs hier eintragen
