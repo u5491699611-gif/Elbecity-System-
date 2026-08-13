@@ -708,5 +708,221 @@ client.on("messageCreate", async message => {
 // ==============================
 // BOT STARTEN
 // ==============================
+new SlashCommandBuilder()
+  .setName("teamwarn")
+  .setDescription("Verwarnt ein Teammitglied.")
+  .addUserOption(option =>
+    option.setName("user")
+      .setDescription("Teammitglied")
+      .setRequired(true)
+  )
+  .addStringOption(option =>
+    option.setName("grund")
+      .setDescription("Grund der Teamwarnung")
+      .setRequired(true)
+  ),
+
+new SlashCommandBuilder()
+  .setName("teamkick")
+  .setDescription("Entfernt ein Teammitglied aus dem Team.")
+  .addUserOption(option =>
+    option.setName("user")
+      .setDescription("Teammitglied")
+      .setRequired(true)
+  )
+  .addStringOption(option =>
+    option.setName("grund")
+      .setDescription("Grund")
+      .setRequired(true)
+  ),
+
+new SlashCommandBuilder()
+  .setName("downrank")
+  .setDescription("Stuft ein Teammitglied herunter.")
+  .addUserOption(option =>
+    option.setName("user")
+      .setDescription("Teammitglied")
+      .setRequired(true)
+  )
+  .addRoleOption(option =>
+    option.setName("rolle")
+      .setDescription("Neue Teamrolle")
+      .setRequired(true)
+  ),
+
+new SlashCommandBuilder()
+  .setName("uprank")
+  .setDescription("Stuft ein Teammitglied hoch.")
+  .addUserOption(option =>
+    option.setName("user")
+      .setDescription("Teammitglied")
+      .setRequired(true)
+  )
+  .addRoleOption(option =>
+    option.setName("rolle")
+      .setDescription("Neue Teamrolle")
+      .setRequired(true)
+  ),
+// ==============================
+// TEAMWARN
+// ==============================
+
+if (commandName === "teamwarn") {
+
+  if (!interaction.member.permissions.has(
+    PermissionsBitField.Flags.ManageRoles
+  )) {
+    return interaction.reply({
+      content: "❌ Du hast keine Berechtigung für Teamwarns.",
+      ephemeral: true
+    });
+  }
+
+  const user = interaction.options.getUser("user");
+  const grund = interaction.options.getString("grund");
+
+  await sendLog(
+    interaction.guild,
+    "⚠️ Teamwarn",
+    `**Teammitglied:** ${user}\n` +
+    `**Bearbeiter:** ${interaction.user}\n` +
+    `**Grund:** ${grund}`
+  );
+
+  return interaction.reply({
+    content:
+      `⚠️ ${user} hat eine Teamwarn erhalten.\n` +
+      `**Grund:** ${grund}`
+  });
+}
+
+
+// ==============================
+// TEAMKICK
+// ==============================
+
+if (commandName === "teamkick") {
+
+  if (!interaction.member.permissions.has(
+    PermissionsBitField.Flags.ManageRoles
+  )) {
+    return interaction.reply({
+      content: "❌ Du hast keine Berechtigung für Teamkicks.",
+      ephemeral: true
+    });
+  }
+
+  const user = interaction.options.getUser("user");
+  const grund = interaction.options.getString("grund");
+
+  const member = await interaction.guild.members.fetch(user.id);
+
+  // Hier die ID deiner Teamrolle eintragen
+  const TEAM_ROLE_ID = "DEINE_TEAMROLLE_ID";
+
+  if (member.roles.cache.has(TEAM_ROLE_ID)) {
+    await member.roles.remove(TEAM_ROLE_ID);
+  }
+
+  await sendLog(
+    interaction.guild,
+    "🚫 Teamkick",
+    `**Teammitglied:** ${user}\n` +
+    `**Bearbeiter:** ${interaction.user}\n` +
+    `**Grund:** ${grund}`
+  );
+
+  return interaction.reply({
+    content:
+      `🚫 ${user} wurde aus dem Team entfernt.\n` +
+      `**Grund:** ${grund}`
+  });
+}
+
+
+// ==============================
+// UPRANK
+// ==============================
+
+if (commandName === "uprank") {
+
+  if (!interaction.member.permissions.has(
+    PermissionsBitField.Flags.ManageRoles
+  )) {
+    return interaction.reply({
+      content: "❌ Du hast keine Berechtigung für Upranks.",
+      ephemeral: true
+    });
+  }
+
+  const user = interaction.options.getUser("user");
+  const role = interaction.options.getRole("rolle");
+
+  const member = await interaction.guild.members.fetch(user.id);
+
+  if (role.position >= interaction.guild.members.me.roles.highest.position) {
+    return interaction.reply({
+      content: "❌ Diese Rolle steht über meiner Bot-Rolle.",
+      ephemeral: true
+    });
+  }
+
+  await member.roles.add(role);
+
+  await sendLog(
+    interaction.guild,
+    "⬆️ Uprank",
+    `**Teammitglied:** ${user}\n` +
+    `**Neue Rolle:** ${role}\n` +
+    `**Bearbeiter:** ${interaction.user}`
+  );
+
+  return interaction.reply({
+    content: `⬆️ ${user} wurde auf ${role} hochgestuft.`
+  });
+}
+
+
+// ==============================
+// DOWNRANK
+// ==============================
+
+if (commandName === "downrank") {
+
+  if (!interaction.member.permissions.has(
+    PermissionsBitField.Flags.ManageRoles
+  )) {
+    return interaction.reply({
+      content: "❌ Du hast keine Berechtigung für Downranks.",
+      ephemeral: true
+    });
+  }
+
+  const user = interaction.options.getUser("user");
+  const role = interaction.options.getRole("rolle");
+
+  const member = await interaction.guild.members.fetch(user.id);
+
+  if (role.position >= interaction.guild.members.me.roles.highest.position) {
+    return interaction.reply({
+      content: "❌ Diese Rolle steht über meiner Bot-Rolle.",
+      ephemeral: true
+    });
+  }
+
+  await member.roles.add(role);
+
+  await sendLog(
+    interaction.guild,
+    "⬇️ Downrank",
+    `**Teammitglied:** ${user}\n` +
+    `**Neue Rolle:** ${role}\n` +
+    `**Bearbeiter:** ${interaction.user}`
+  );
+
+  return interaction.reply({
+    content: `⬇️ ${user} wurde auf ${role} heruntergestuft.`
+  });
+}
 
 client.login(TOKEN);
