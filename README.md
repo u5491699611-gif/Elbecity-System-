@@ -23,7 +23,7 @@ const {
 // EINSTELLUNGEN
 // ==============================
 
-const TOKEN = "DEIN_BOT_TOKEN";
+const TOKEN = "2a8cce4178e38907d9107be2fdb0f5946d652d1182669893dfe7c83a909d2335";
 const CLIENT_ID = "DEINE_BOT_ID";
 const GUILD_ID = "DEINE_SERVER_ID";
 
