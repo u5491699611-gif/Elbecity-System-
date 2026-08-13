@@ -925,4 +925,4 @@ if (commandName === "downrank") {
   });
 }
 
-client.login(TOKEN);
+client.login(2a8cce4178e38907d9107be2fdb0f5946d652d1182669893dfe7c83a909d2335);
